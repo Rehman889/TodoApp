@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, useState } from "react";
 import { PieChart, Pie, Sector, ResponsiveContainer, Cell } from "recharts";
 
 const COLORS = [
@@ -92,43 +92,35 @@ const renderActiveShape = (props) => {
   );
 };
 
-export default class Example extends PureComponent {
-  data = this.props.data;
-  static demoUrl =
-    "https://codesandbox.io/s/pie-chart-with-customized-active-shape-y93si";
+const Example = ({ data }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  state = {
-    activeIndex: 0,
+  const onPieEnter = (_, index) => {
+    setActiveIndex(index);
   };
 
-  onPieEnter = (_, index) => {
-    this.setState({
-      activeIndex: index,
-    });
-  };
+  return (
+    <ResponsiveContainer width="100%" height={400}>
+      <PieChart width={700} height={800}>
+        <Pie
+          activeIndex={activeIndex}
+          activeShape={renderActiveShape}
+          data={data}
+          cx="50%"
+          cy="50%"
+          innerRadius={110}
+          outerRadius={150}
+          fill="#8884d8"
+          dataKey="value"
+          onMouseEnter={onPieEnter}
+        >
+          {data.map((entry, index) => (
+            <Cell key={index} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+      </PieChart>
+    </ResponsiveContainer>
+  );
+};
 
-  render() {
-    return (
-      <ResponsiveContainer width="100%" height={400}>
-        <PieChart width={700} height={800}>
-          <Pie
-            activeIndex={this.state.activeIndex}
-            activeShape={renderActiveShape}
-            data={this.data}
-            cx="50%"
-            cy="50%"
-            innerRadius={110}
-            outerRadius={150}
-            fill="#8884d8"
-            dataKey="value"
-            onMouseEnter={this.onPieEnter}
-          >
-            {this.props.data.map((entry, index) => (
-              <Cell key={index} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-        </PieChart>
-      </ResponsiveContainer>
-    );
-  }
-}
+export default Example;

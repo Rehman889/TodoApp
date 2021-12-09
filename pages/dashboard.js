@@ -2,14 +2,19 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import PieChart from "../component/PieChart";
 import { todolist } from "../recoil/atom";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 
-function dashboard() {
-  const [todoli, setTodoli] = useRecoilState(todolist);
+function Dashboard() {
+  const [todoli, setTodoLi] = useState([]);
   let [data, setData] = useState([
     { name: "Completed", value: 2 },
     { name: "Pending", value: 2 },
   ]);
+
+  useEffect(() => {
+    if (JSON.parse(localStorage.getItem("todolist")) !== null)
+      setTodoLi(JSON.parse(localStorage.getItem("todolist")));
+  }, []);
 
   useEffect(() => {
     console.log(todoli);
@@ -29,10 +34,10 @@ function dashboard() {
 
   return (
     <div className="text-center font-bold mt-8">
-      <h1>TODO's Of all Completed Users</h1>
+      <h1>TODO&apos;s Of all Completed Users</h1>
       <PieChart data={data} />
     </div>
   );
 }
 
-export default dashboard;
+export default Dashboard;
